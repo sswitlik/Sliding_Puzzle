@@ -114,6 +114,17 @@ import java.util.List;
     		break;
     	}
     }
+	    
+    public void MixUp(int h_many)
+    {
+	Random generator = new Random();
+ 
+	for(int i=0; i<h_many; i++) 
+	{
+   		move(generator.nextInt(4))); 		
+	}
+    }
+	    
     //@Override
     public List<GraphState> generateChildren() {
         return null;
