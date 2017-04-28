@@ -1,4 +1,3 @@
-
 import sac.graph.AStar;
 import sac.graph.GraphState;
 import sac.graph.GraphStateImpl;
@@ -213,6 +212,24 @@ import java.util.Random;
     //@Override
     public List<GraphState> generateChildren() 
     {
+    	//generujemy 4 potomkow powstalych w wyniku
+    	//przesuniec w kazdym mozliwym kierunku
+    	//
+    	//jesli potomek nie moze wykonac przesuniecia
+    	//nie dodajemy go do listy potomkow
+    	
+    	List<GraphState> children = new ArrayList<GraphState>();
+    	
+    	for(int i=0;i<4;i++)	//4 to liczba kierunkow
+    	{
+    		Puzzle child = new Puzzle(this);
+    		if (child.CanMove(i))
+    		{
+    			child.move(i);
+    			children.add(child);
+    		}
+    	}
+    	
         return null;
     }
 
