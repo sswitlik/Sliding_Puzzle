@@ -1,8 +1,13 @@
 import sac.graph.AStar;
+import sac.graph.BestFirstSearch;
+import sac.graph.GraphSearchAlgorithm;
+import sac.graph.GraphSearchConfigurator;
 import sac.graph.GraphState;
 import sac.graph.GraphStateImpl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -67,22 +72,50 @@ import java.util.Random;
         return result;
     }
 
+    //-------------------------------------------------------------------
         public static void main(String[] arg)
         {
             Puzzle P1 = new Puzzle();
+            
+            P1.FromString("015827436");
+            //P1.MixUp(10);
             System.out.println(P1.toString());
             
-            //P1.generateChildren();
-            
-            P1.move(0);
-            P1.move(2);
-            
-            System.out.println(P1.toString());
-            P1.generateChildren();
-            	
-        }
+            //
+            GraphSearchConfigurator conf = new GraphSearchConfigurator();
+    		conf.setWantedNumberOfSolutions(Integer.MAX_VALUE);
+    		
+    		GraphSearchAlgorithm a = new AStar(P1);
+    		
+    		
+    		a.execute();
+    		Puzzle solution = ( Puzzle ) a.getSolutions().get(0);
 
+    		List<GraphState> sols = a.getSolutions();
+
+    		System.out.println("Solutions: " + sols.size());
+    		//for (GraphState sol : sols) {
+    			//System.out.println(sol);
+    		//}
+
+    		System.out.println("Time: " + a.getDurationTime() );
+    		System.out.println("Closed: " + a.getClosedStatesCount());
+    		System.out.println("Open: " + a.getOpenSet().size());
+    		System.out.println("Solution: \n" + solution);
+    		
+        }
+    //---------------------------------------------------------------------------
    
+    public void FromString(String txt) {
+    	int k = 0;
+        for (int i = 0; i < 3; i++) {
+        	for (int j = 0; j < 3; j++) {
+            	board[i][j] = Byte.valueOf(txt.substring(k, k + 1));
+                k++;
+            }
+        }
+    }
+        
     public void move(Ruch r)
     {
     	//zamiana miejscami dwoch wartosci board
@@ -218,7 +251,7 @@ import java.util.Random;
     	//jesli potomek nie moze wykonac przesuniecia
     	//nie dodajemy go do listy potomkow
     	
-    	List<GraphState> children = new ArrayList<GraphState>();
+    	List<GraphState> children = new LinkedList<GraphState>();
     	
     	for(int i=0;i<4;i++)	//4 to liczba kierunkow
     	{
@@ -227,10 +260,11 @@ import java.util.Random;
     		{
     			child.move(i);
     			children.add(child);
+    			System.out.println(child.toString());
     		}
     	}
     	
-        return null;
+        return children;
     }
 
     //@Override
@@ -243,5 +277,11 @@ import java.util.Random;
     			if (k++ != board[i][j])
     				return false;
         return true;
+    }
+
+    //@Override
+    @Override
+    public int hashCode () {
+    	return Arrays.hashCode(board);
     }
 }
