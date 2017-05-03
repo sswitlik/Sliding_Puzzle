@@ -1,3 +1,4 @@
+import sac.State;
 import sac.graph.AStar;
 import sac.graph.BestFirstSearch;
 import sac.graph.GraphSearchAlgorithm;
@@ -77,11 +78,13 @@ import java.util.Random;
         {
             Puzzle P1 = new Puzzle();
             
-            P1.FromString("015827436");
-            //P1.MixUp(10);
+            P1.MixUp(1000);
+            //P1.FromString("312075468");
+            //P1.FromString("015827436");
             System.out.println(P1.toString());
             
             //
+            Puzzle.setHFunction(new HFunctionMisplacedTiles());
             GraphSearchConfigurator conf = new GraphSearchConfigurator();
     		conf.setWantedNumberOfSolutions(Integer.MAX_VALUE);
     		
@@ -106,6 +109,23 @@ import java.util.Random;
         }
     //---------------------------------------------------------------------------
    
+    public double calculate(State state) 
+    {
+    	Puzzle puz = (Puzzle) state;
+    	double h = 0.0;
+    	
+    	int k = 0;
+    	for (int i= 0; i < puz.n; i++) {
+    		for (int j = 0; j < puz.n; j++) {
+    			if (puz.board[i][j] != k)
+    				h += 1.0;
+    			k++;
+    		}
+    	}
+    	System.out.println(h);
+    	return h;
+    }    
+    
     public void FromString(String txt) {
     	int k = 0;
         for (int i = 0; i < 3; i++) {
